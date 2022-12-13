@@ -13,11 +13,15 @@ import com.example.waimai.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/dish")
@@ -29,6 +33,8 @@ public class DishController {
     CategoryService categoryService;
     @Autowired
     DishFlavorService dishFlavorService;
+    @Autowired
+    RedisTemplate redisTemplate;
     /**
      * 分页时Dish里面只有categoryId,前端需要的是categoryName,DishDto里面有categoryName属性
      * @param page
@@ -64,7 +70,9 @@ public class DishController {
      * @return
      */
     @PostMapping
+    @CacheEvict(value = "dishCache",allEntries = true)
     public Object addDish(@RequestBody DishDto dishDto){
+//        redisTemplate.opsForValue().set();
         service.saveDishWithFlavor(dishDto);
         return R.success(null);
     }
@@ -86,6 +94,7 @@ public class DishController {
      * @return
      */
     @PutMapping
+    @CacheEvict(value = "dishCache",allEntries = true)  //allEntries要指定为true删除所有,不然的话要根据cacheName删除
     public Object saveEditDish(@RequestBody DishDto dishDto){
         service.updateDishAndFlavor(dishDto);
         return R.success(null);
@@ -118,11 +127,12 @@ public class DishController {
     }
 
     @GetMapping("/list")
+    @Cacheable(value = "dishCache" ,key = "#categoryId")
     public R<List<DishDto>> dishList(Long categoryId){
+        List<DishDto> dishDtoList = new ArrayList<>();
         QueryWrapper<Dish> wrapper = new QueryWrapper();
         wrapper.eq("category_id",categoryId).orderByDesc("sort");
         List<Dish> dishList = service.list(wrapper);
-        List<DishDto> dishDtoList = new ArrayList<>();
         QueryWrapper<DishFlavor> flavorQueryWrapper = new QueryWrapper<>();
         for (Dish dish :
                 dishList) {

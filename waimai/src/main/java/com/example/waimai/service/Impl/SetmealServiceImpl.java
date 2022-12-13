@@ -14,6 +14,7 @@ import com.example.waimai.service.SetmealDishService;
 import com.example.waimai.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,8 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     CategoryService categoryService;
     @Autowired
     SetmealDishService setmealDishService;
+    @Autowired
+    RedisTemplate redisTemplate;
     @Override
     public R<Page<SetmealDto>> setmealPage(long page, long pageSize,String name) {
         Page<SetmealDto> page1 = new Page<>(page,pageSize);
@@ -55,6 +58,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Override
     public void deleteSetmeal(Long[] ids) {
         List<Long> idList = Arrays.asList(ids);
+        redisTemplate.delete(this.getById(ids[0]).getCategoryId());
         setmealService.removeBatchByIds(idList);
 
         QueryWrapper<SetmealDish> wrapper = new QueryWrapper<>();

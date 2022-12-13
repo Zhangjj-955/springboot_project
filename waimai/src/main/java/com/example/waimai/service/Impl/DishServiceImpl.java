@@ -10,6 +10,7 @@ import com.example.waimai.service.DishFlavorService;
 import com.example.waimai.service.DishService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,8 @@ import java.util.List;
 public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements DishService {
     @Autowired
     DishFlavorService flavorService;
-
+    @Autowired
+    RedisTemplate redisTemplate;
     /**
      * 新增菜品同时保存口味
      * @param dishDto
@@ -38,6 +40,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             flavor.setDishId(dishDto.getId());
         }
         flavorService.saveBatch(flavorList);
+        redisTemplate.delete(dishDto.getCategoryId());
     }
 
     /**
@@ -71,14 +74,18 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             dishFlavor.setDishId(id);
         }
         flavorService.saveBatch(flavorList);
+        redisTemplate.delete(dishDto.getCategoryId());
     }
     @Transactional
     @Override
     public void deleteDishAndFlavor(Long[] ids) {
         List<Long> idList = Arrays.asList(ids);
+        Dish dish = this.getById(ids[0]);
         this.removeBatchByIds(idList);
         QueryWrapper<DishFlavor> wrapper = new QueryWrapper<>();
         wrapper.in("dish_id",idList);
+
         flavorService.remove(wrapper);
+        redisTemplate.delete(dish.getCategoryId());
     }
 }

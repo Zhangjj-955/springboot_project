@@ -1,10 +1,8 @@
 package com.example.waimai.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.waimai.common.BaseContext;
 import com.example.waimai.common.R;
-import com.example.waimai.entity.Dish;
 import com.example.waimai.entity.ShoppingCart;
 import com.example.waimai.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +18,7 @@ import java.util.Map;
 public class ShoppingCartController {
     @Autowired
     ShoppingCartService shoppingCartService;
+
     @PostMapping("/add")
     public R<ShoppingCart> add(@RequestBody ShoppingCart shoppingCart){
         shoppingCart.setUserId(BaseContext.getCurrentId());

@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: reggie_take_out
   datasource:
@@ -9,6 +11,25 @@ spring:
       url: jdbc:mysql://localhost:3306/waimai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: 200538
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  cache:
+    redis:
+      time-to-live: 1800000
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 1954204887@qq.com
+    password: vjlfftebpipkefdc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 mybatis-plus:
   configuration:
     #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
@@ -19,3 +40,27 @@ mybatis-plus:
       id-type: ASSIGN_ID
 waimai:
   path: D:\Java_Project\SpringBoot\waimai\src\main\resources\image\
+#  shardingsphere:
+#    datasource:
+#      names:
+#        master
+#      master:
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql//192.168.31.128:3306/reggie?characterEncoding=utf-8
+#        username: root
+#        password: root
+#      slave:
+#        type: com.alibaba.druid.pool.DruidDataSource
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:mysql://localhost:3306/waimai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+#          username: root
+#          password: 200538
+#    masters-lave:
+#      load-balance-algorithm-type: round_robin
+#      name: dataSource
+#      master-data-source-name: master
+#      slave-data-source-names: slave
+#    props:
+#      sql:
+#        show: true

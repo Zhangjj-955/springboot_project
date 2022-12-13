@@ -46,7 +46,7 @@ public class EmployeeController {
     public R<Page> page(int page,int pageSize,@RequestParam(required = false) String name){
         Page<Employee> page1 = new Page<>(page,pageSize);
         QueryWrapper<Employee> wrapper = new QueryWrapper<Employee>();
-        wrapper.like(!(name ==null),"name",name).orderByDesc("create_time");
+        wrapper.like(!(name == null),"name",name).orderByDesc("create_time");
         service.page(page1,wrapper);
         return R.success(page1);
     }
@@ -82,23 +82,23 @@ public class EmployeeController {
 
         //主键由mybatis-plus默认用雪花算法生成
         boolean result = service.save(employee);
-        if (result){
+        if (!result){
             return R.error(null);
         }else {
             return R.success(null);
         }
     }
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public Object login(@RequestBody Map<String,String> map, HttpSession session){
         log.info("进入/login");
         String password = DigestUtils.md5DigestAsHex(map.get("password").getBytes());
 
         Employee employee = service.getOne(new QueryWrapper<Employee>().eq("username",map.get("username")).eq("password",password));
         if (employee!=null){
-            if (employee.getStatus()!=1){
-                return R.error("账号已禁用");
-            }
-            session.setAttribute("employee",employee.getId());
+//            if (employee.getJob()!=1){
+//                return R.error("账号已禁用");
+//            }
+            session.setAttribute("employee",employee.getId());      //filter会根据"employee"判断是否已登陆
             return R.success(employee);
         }else {
             return R.error("账号或密码错误");
@@ -109,5 +109,14 @@ public class EmployeeController {
         log.info("进入/logout");
         session.removeAttribute("employee");
         return R.success(null);
+    }
+    @DeleteMapping
+    public Object delete(@RequestBody Employee employee){
+        boolean result = service.removeById(employee);
+        if (result){
+            return R.success(null);
+        }else {
+            return R.error("删除失败");
+        }
     }
 }

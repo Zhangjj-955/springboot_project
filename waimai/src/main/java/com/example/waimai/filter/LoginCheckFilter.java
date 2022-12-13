@@ -12,26 +12,28 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 @Slf4j
-@WebFilter(filterName = "loginCheckFilter",urlPatterns = "/*")
+@WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String requestURL = request.getRequestURI();
         /*
-        没有登陆时/employee/index.html能进入，但是进入后又有/employee/page的请求，再次进入filter，判断登录状态，又回到login.html
+        没有登陆时/employee/index.html能进入(WebConfig配置)，但是进入后又有/employee/page的请求，再次进入filter，判断登录状态，又回到login.html
          */
         String[] urls = {
-            "/employee/login",
-            "/employee/logout",
-            "/backend/**",
-            "/front/**",
-            "/user/login",
-            "/user/logout",
-            "/user/sendMsg"
+                "/employee/login",
+                "/employee/logout",
+                "/backend/**",
+                "/front/**",
+                "/user/login",
+                "/user/logout",
+                "/user/sendMsg"
         };
 
         for (String url :
@@ -41,20 +43,21 @@ public class LoginCheckFilter implements Filter {
                 return;
             }
         }
-        /**
-         * 记住要return！！！！惨痛的教训
-         */
-        if (request.getSession().getAttribute("employee")!=null){
+
+/**
+ * 记住要return！！！！惨痛的教训
+ */
+        if (request.getSession().getAttribute("employee") != null) {
             BaseContext.setCurrentId((Long) request.getSession().getAttribute("employee"));
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
-        if (request.getSession().getAttribute("user")!=null) {
+        if (request.getSession().getAttribute("user") != null) {
             BaseContext.setCurrentId((Long) request.getSession().getAttribute("user"));
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
         servletResponse.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
-
+//        ((HttpServletResponse) servletResponse).sendRedirect("/backend/page/login/login.html");
     }
 }

@@ -130,8 +130,8 @@ public class DishController {
     @Cacheable(value = "dishCache" ,key = "#categoryId")
     public R<List<DishDto>> dishList(Long categoryId){
         List<DishDto> dishDtoList = new ArrayList<>();
-        QueryWrapper<Dish> wrapper = new QueryWrapper();
-        wrapper.eq("category_id",categoryId).orderByDesc("sort");
+        QueryWrapper<Dish> wrapper = new QueryWrapper<>();
+        wrapper.eq("category_id",categoryId).orderByDesc("sale_num");
         List<Dish> dishList = service.list(wrapper);
         QueryWrapper<DishFlavor> flavorQueryWrapper = new QueryWrapper<>();
         for (Dish dish :

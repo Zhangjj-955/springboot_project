@@ -27,12 +27,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if (dishCount!=0){
             throw new CustomerException("已关联菜品，不能删除");
         }
-        wrapper = new QueryWrapper<Setmeal>();
-        wrapper.eq("category_id",id);
-        long setmealCount = setmealService.count(wrapper);
-        if (setmealCount!=0){
-            throw new CustomerException("已关联套餐，不能删除");
-        }
+//        wrapper = new QueryWrapper<Setmeal>();
+//        wrapper.eq("category_id",id);
+//        long setmealCount = setmealService.count(wrapper);
+//        if (setmealCount!=0){
+//            throw new CustomerException("已关联套餐，不能删除");
+//        }
         super.removeById(id);
     }
 }

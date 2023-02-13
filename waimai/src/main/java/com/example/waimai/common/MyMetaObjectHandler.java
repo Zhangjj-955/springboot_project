@@ -17,8 +17,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
             metaObject.setValue("createTime", LocalDateTime.now());
         if (metaObject.hasSetter("createUser"))
             metaObject.setValue("createUser",BaseContext.getCurrentId());
-        if (metaObject.hasSetter("orderTime"))
-            metaObject.setValue("orderTime",LocalDateTime.now());
+//        if (metaObject.hasSetter("orderTime"))
+//            metaObject.setValue("orderTime",LocalDateTime.now());
         if (metaObject.hasSetter("checkoutTime"))
             metaObject.setValue("checkoutTime",LocalDateTime.now());
     }

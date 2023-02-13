@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.waimai.common.R;
+import com.example.waimai.dto.CanteenDto;
 import com.example.waimai.dto.SetmealDto;
 import com.example.waimai.entity.Dish;
 import com.example.waimai.entity.Setmeal;
@@ -51,7 +52,7 @@ public class SetMealController {
     }
     @PostMapping("/status/{statu}")
     public Object changeStatus(@PathVariable int statu,Long[] ids){
-        UpdateWrapper<Setmeal> wrapper = new UpdateWrapper();
+        UpdateWrapper<Setmeal> wrapper = new UpdateWrapper<>();
         List<Long> idList = Arrays.asList(ids);
         wrapper.set("status",statu).in("id",idList);
         setmealService.update(wrapper);
@@ -67,4 +68,5 @@ public class SetMealController {
 
         return R.success(setmealList);
     }
+
 }

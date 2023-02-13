@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>饭堂管理系统</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
     <link rel="stylesheet" href="../../styles/common.css"/>
@@ -117,9 +117,9 @@
                 ruleForm: {
                     'name': '',
                     'phone': '',
-                    'sex': '男',
+                    'sex': '',
                     'idNumber': '',
-                    'job': '管理员',
+                    'job': '',
                     username: ''
                 }
             }
@@ -158,6 +158,7 @@
                         this.ruleForm = res.data
                         this.ruleForm.sex = res.data.sex === '0' ? '女' : '男'
                         // this.ruleForm.password = ''
+                        this.ruleForm.job = res.data.job === 1 ? '管理员' : '普通员工'
                     } else {
                         this.$message.error(res.msg || '操作失败')
                     }
@@ -198,7 +199,8 @@
                         } else {
                             const params = {
                                 ...this.ruleForm,
-                                sex: this.ruleForm.sex === '女' ? '0' : '1'
+                                sex: this.ruleForm.sex === '女' ? '0' : '1',
+                                job: this.ruleForm.job === '管理员' ? '1' : '0'
                             }
                             editEmployee(params).then(res => {
                                 if (res.code === 1) {

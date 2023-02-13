@@ -32,3 +32,28 @@ function orderAgainApi(data) {
       data
   })
 }
+
+// 根据id查询一个orderDto
+const queryOrderDtoById = (id) => {
+    return $axios({
+        url: '/order/getOrderById',
+        method: 'get',
+        params: {...id}
+    })
+}
+
+changeDishRateApi = (data) => {
+  return $axios({
+      'url': '/order/changeDishRate',
+      'method': 'post',
+      data: {...data}
+  })
+}
+
+const submitOrderComment = (data) => {
+    return $axios({
+        'url': '/order/submitComment',
+        'method': 'post',
+        data: {...data}
+    })
+}

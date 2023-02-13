@@ -1,6 +1,5 @@
 package com.example.waimai.filter;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.example.waimai.common.BaseContext;
 import com.example.waimai.common.R;
@@ -17,7 +16,6 @@ import java.io.IOException;
 @WebFilter(filterName = "loginCheckFilter", urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -26,6 +24,7 @@ public class LoginCheckFilter implements Filter {
         /*
         没有登陆时/employee/index.html能进入(WebConfig配置)，但是进入后又有/employee/page的请求，再次进入filter，判断登录状态，又回到login.html
          */
+//        log.info(requestURL);
         String[] urls = {
                 "/employee/login",
                 "/employee/logout",
@@ -35,7 +34,6 @@ public class LoginCheckFilter implements Filter {
                 "/user/logout",
                 "/user/sendMsg"
         };
-
         for (String url :
                 urls) {
             if (PATH_MATCHER.match(url, requestURL)) {
@@ -43,7 +41,6 @@ public class LoginCheckFilter implements Filter {
                 return;
             }
         }
-
 /**
  * 记住要return！！！！惨痛的教训
  */
@@ -58,6 +55,5 @@ public class LoginCheckFilter implements Filter {
             return;
         }
         servletResponse.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
-//        ((HttpServletResponse) servletResponse).sendRedirect("/backend/page/login/login.html");
     }
 }

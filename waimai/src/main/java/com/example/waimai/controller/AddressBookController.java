@@ -8,6 +8,7 @@ import com.example.waimai.entity.AddressBook;
 import com.example.waimai.service.AddressBookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -54,5 +55,23 @@ public class AddressBookController {
         }else {
             return R.error("没有默认地址");
         }
+    }
+    @GetMapping("/{id}")
+    public R<AddressBook> getAddressBook(@PathVariable String id){
+        QueryWrapper<AddressBook> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+        AddressBook one = addressBookService.getOne(queryWrapper);
+        return R.success(one);
+    }
+    @Transactional
+    @PutMapping
+    public Object saveEditAddress(@RequestBody AddressBook addressBook){
+        QueryWrapper<AddressBook> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", addressBook.getId());
+        AddressBook addressBook1 = addressBookService.getOne(queryWrapper);
+        addressBook.setUserId(addressBook1.getUserId());
+        addressBookService.removeById(addressBook.getId());
+        addressBookService.save(addressBook);
+        return R.success(null);
     }
 }

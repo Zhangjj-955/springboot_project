@@ -30,9 +30,9 @@ public class Orders implements Serializable {
     //地址id
     private Long addressBookId;
 
-    @TableField(fill = FieldFill.INSERT)
-    //下单时间
-    private LocalDateTime orderTime;
+//    @TableField(fill = FieldFill.INSERT)
+    //使用时间
+    private String orderTime;
 
     @TableField(fill = FieldFill.INSERT)
     //结账时间
@@ -60,4 +60,13 @@ public class Orders implements Serializable {
 
     //收货人
     private String consignee;
+
+    //配送方式
+    private Integer delivery;
+
+    //评论
+    private String comments;
+
+    //窗口号
+    private Integer windowNumber;
 }

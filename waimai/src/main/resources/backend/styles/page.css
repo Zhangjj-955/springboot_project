@@ -11,7 +11,7 @@
 .dashboard-container .container .tableBar {
   display: flex;
   margin-bottom: 20px;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .dashboard-container .container .tableBox {
   width: 100%;
@@ -41,7 +41,9 @@
 .dashboard-container .container .tableLab .el-button {
   margin-left: 10px;
 }
-
+.dashboard-container .container .tableBar .el-button {
+  margin-left: 10px;
+}
 .el-table-column--selection .cell {
   padding-left: 10px;
 }

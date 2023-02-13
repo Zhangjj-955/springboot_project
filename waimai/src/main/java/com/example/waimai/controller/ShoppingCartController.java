@@ -66,7 +66,7 @@ public class ShoppingCartController {
         List<ShoppingCart> shoppingCartList = shoppingCartService.list(queryWrapper);
         return R.success(shoppingCartList);
     }
-    @DeleteMapping("clean")
+    @DeleteMapping("/clean")
     public Object clean(){
         QueryWrapper<ShoppingCart> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id",BaseContext.getCurrentId());

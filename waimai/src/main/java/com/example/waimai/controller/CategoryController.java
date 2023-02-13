@@ -7,7 +7,6 @@ import com.example.waimai.entity.Category;
 import com.example.waimai.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,10 +41,18 @@ public class CategoryController {
         return R.success(null);
     }
     @GetMapping("/list")
-    public R<List<Category>> list(String type){
-        QueryWrapper<Category> wrapper = new QueryWrapper();
+    public R<List<Category>> list(String type,String canteenId){
+        QueryWrapper<Category> wrapper = new QueryWrapper<>();
         wrapper.eq(type!=null,"type",type);
+        wrapper.eq(canteenId!=null,"canteen_id",canteenId);
         List<Category> categoryList = service.list(wrapper);
         return R.success(categoryList);
     }
+//    @GetMapping("/listByCanteen")
+//    public R<List<Category>> listByCanteen(String id){
+//        QueryWrapper<Category> wrapper = new QueryWrapper<>();
+//        wrapper.eq("canteen_id",id);
+//        List<Category> categoryList = service.list(wrapper);
+//        return R.success(categoryList);
+//    }
 }

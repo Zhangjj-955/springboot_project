@@ -5,7 +5,16 @@ function categoryListApi() {
       'method': 'get',
     })
   }
-
+//获取饭堂下的菜品分类
+function categoryListByCanteenApi(canteenId){
+    return $axios({
+        'url': '/category/list',
+        'method': 'get',
+        params:{
+            canteenId: canteenId
+        }
+    })
+}
 //获取菜品分类对应的菜品
 function dishListApi(data) {
     return $axios({
@@ -68,4 +77,11 @@ function setMealDishDetailsApi(id) {
     })
 }
 
-
+//获取全部饭堂
+function canteenListApi(data){
+    return $axios({
+        'url': '/canteen/list',
+        'method': 'get',
+        params: {...data}
+    })
+}

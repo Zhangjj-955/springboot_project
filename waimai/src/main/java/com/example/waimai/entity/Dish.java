@@ -33,7 +33,7 @@ public class Dish implements Serializable {
 
 
     //商品码
-    private String code;
+//    private String code;
 
 
     //图片
@@ -71,4 +71,8 @@ public class Dish implements Serializable {
     //是否删除
     private Integer isDeleted;
 
+    private Integer rate;
+
+    //销量
+    private Integer saleNum;
 }

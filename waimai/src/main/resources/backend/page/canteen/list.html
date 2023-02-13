@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>饭堂管理系统</title>
   <!-- 引入样式 -->
   <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
   <link rel="stylesheet" href="../../styles/common.css" />
@@ -14,33 +14,33 @@
    <div class="dashboard-container" id="combo-app">
     <div class="container">
       <div class="tableBar">
-        <el-input
-          v-model="input"
-          placeholder="请输入套餐名称"
-          style="width: 250px"
-          clearable
-          @keyup.enter.native="handleQuery"
-        >
-          <i
-            slot="prefix"
-            class="el-input__icon el-icon-search"
-            style="cursor: pointer"
-            @click="init"
-          ></i>
-        </el-input>
-        <div class="tableLab">
-          <span class="span-btn delBut non" @click="deleteHandle('批量')">批量删除</span>
-          <span class="span-btn blueBug non" @click="statusHandle('1')">批量启售</span>
-          <span
-            style="border:none;"
-            class="span-btn delBut non"
-            @click="statusHandle('0')"
-          >批量停售</span>
+<!--        <el-input-->
+<!--          v-model="input"-->
+<!--          placeholder="请输入套餐名称"-->
+<!--          style="width: 250px"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        >-->
+<!--          <i-->
+<!--            slot="prefix"-->
+<!--            class="el-input__icon el-icon-search"-->
+<!--            style="cursor: pointer"-->
+<!--            @click="init"-->
+<!--          ></i>-->
+<!--        </el-input>-->
+        <div class="tableLab" v-if="loginJob === 1">
+          <span class="span-btn delBut non" @click="deleteHandle('批量')">批量停业</span>
+          <span class="span-btn blueBug non" @click="statusHandle('1')">批量启业</span>
+<!--          <span-->
+<!--            style="border:none;"-->
+<!--            class="span-btn delBut non"-->
+<!--            @click="statusHandle('0')"-->
+<!--          >批量停售</span>-->
           <el-button
             type="primary"
-            @click="addSetMeal('add')"
+            @click="addCanteen('add')"
           >
-            + 新建套餐
+            + 添加饭堂
           </el-button>
         </div>
       </div>
@@ -56,50 +56,56 @@
         ></el-table-column>
         <el-table-column
           prop="name"
-          label="套餐名称"
+          label="饭堂名称"
         ></el-table-column>
-        <el-table-column prop="image" label="图片"  align="center">
-          <template slot-scope="{ row }">
-            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;" :src="getImage(row.image)" :preview-src-list="[ `/common/download?name=${row.image}` ]" >
-              <div slot="error" class="image-slot">
-                <img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >
-              </div> 
-            </el-image>
-          </template>
-        </el-table-column>
+<!--        <el-table-column prop="image" label="图片"  align="center">-->
+<!--          <template slot-scope="{ row }">-->
+<!--            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;" :src="getImage(row.image)" :preview-src-list="[ `/common/download?name=${row.image}` ]" >-->
+<!--              <div slot="error" class="image-slot">-->
+<!--                <img src="./../../images/noImg.png"  style="width: auto; height: 40px; border:none;" >-->
+<!--              </div> -->
+<!--            </el-image>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column-->
+<!--          prop="categoryName"-->
+<!--          label="套餐分类"-->
+<!--        ></el-table-column>-->
         <el-table-column
-          prop="categoryName"
-          label="套餐分类"
-        ></el-table-column>
-        <el-table-column
-          prop="price"
-          label="套餐价"
-        >
+          prop="characterStringList"
+          label="特色">
+<!--          width="200"-->
+
           <template slot-scope="scope">
-            <span>￥{{ scope.row.price/100 }}</span>
+<!--            <span>￥{{ scope.row.price/100 }}</span>-->
+<!--            <span v-for="item in scope">-->
+<!--                {{item}}-->
+<!--            </span>-->
+              <el-tag v-for="item in scope.row.characterStringList">{{item}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="售卖状态">
+        <el-table-column label="开业状态">
           <template slot-scope="scope">
-            <span>{{ scope.row.status == '0' ? '停售' : '启售' }}</span>
+            <span>{{ scope.row.status == '0' ? '停业' : '开业' }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="updateTime"
-          label="最后操作时间"
-        >
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          prop="updateTime"-->
+<!--          label="最后操作时间"-->
+<!--        >-->
+<!--        </el-table-column>-->
         <el-table-column
           label="操作"
           width="160"
           align="center"
+          v-if="loginJob === 1"
         >
           <template slot-scope="scope">
             <el-button
               type="text"
               size="small"
               class="blueBug"
-              @click="addSetMeal(scope.row.id)"
+              @click="addCanteen(scope.row.id)"
             >
               修改
             </el-button>
@@ -109,7 +115,7 @@
               class="blueBug"
               @click="statusHandle(scope.row)"
             >
-              {{ scope.row.status == '0' ? '启售' : '停售' }}
+                  {{ scope.row.status == '0' ? '开业' : '停业' }}
             </el-button>
             <el-button
               type="text"
@@ -151,14 +157,17 @@
              counts: 0,
              page: 1,
              pageSize: 10,
-             tableData : [],
+             tableData : [
+               {"name":"第一饭堂","price":200,"status":'0',"updateTime":"2020"},
+             ],
              dishState : '',
              checkList: []
           }
         },
         computed: {},
         created() {
-          this.init()
+          this.init();
+            this.loginJob = JSON.parse(localStorage.getItem('userInfo')).job
         },
         mounted() {
         },
@@ -167,9 +176,9 @@
             const params = {
               page: this.page,
               pageSize: this.pageSize,
-              name: this.input ? this.input : undefined
+              // name: this.input ? this.input : undefined
             }
-            await getSetmealPage(params).then(res => {
+            await getCanteenPage(params).then(res => {
               if (String(res.code) === '1') {
                 this.tableData = res.data.records || []
                 this.counts = res.data.total
@@ -186,18 +195,18 @@
             this.init();
           },
           // 添加
-          addSetMeal (st) {
+          addCanteen (st) {
             if (st === 'add'){
               window.parent.menuHandle({
                 id: '5',
-                url: '/backend/page/combo/add.html',
-                name: '添加套餐'
+                url: '/backend/page/canteen/add.html',
+                name: '添加饭堂'
               },true)
             } else {
               window.parent.menuHandle({
                 id: '5',
-                url: '/backend/page/combo/add.html?id='+st,
-                name: '修改套餐'
+                url: '/backend/page/canteen/add.html?id='+st,
+                name: '修改饭堂'
               },true)
             }
           },
@@ -209,11 +218,11 @@
                 return this.$message.error('请选择删除对象')
               }
             }
-            this.$confirm('确定删除该套餐, 是否继续?', '确定删除', {
+            this.$confirm('确定删除该饭堂, 是否继续?', '确定删除', {
               'confirmButtonText': '确定',
               'cancelButtonText': '取消',
             }).then(() => {
-              deleteSetmeal(type === '批量' ? this.checkList.join(',') : id).then(res => {
+              deleteCanteen(type === '批量' ? this.checkList.join(',') : id).then(res => {
                 if (res.code === 1) {
                   this.$message.success('删除成功！')
                   this.handleQuery()
@@ -231,7 +240,7 @@
             let params = {}
             if (typeof row === 'string' ){
               if (this.checkList.length == 0){
-                this.$message.error('批量操作，请先勾选操作菜品！')
+                this.$message.error('批量操作，请先勾选操作饭堂！')
                 return false
               }
               params.ids = this.checkList.join(',')
@@ -240,15 +249,15 @@
               params.ids = row.id
               params.status = row.status ? '0' : '1'
             }
-            this.$confirm('确认更改该套餐状态?', '提示', {
+            this.$confirm('确认更改该饭堂状态?', '提示', {
               'confirmButtonText': '确定',
               'cancelButtonText': '取消',
               'type': 'warning'
             }).then(() => {
               // 起售停售---批量起售停售接口
-              setmealStatusByStatus(params).then(res => {
+                canteenStatusByStatus(params).then(res => {
                 if (res.code === 1) {
-                  this.$message.success('套餐状态已经更改成功！')
+                  this.$message.success('饭堂状态已经更改成功！')
                   this.handleQuery()
                 } else {
                   this.$message.error(res.msg || '操作失败')

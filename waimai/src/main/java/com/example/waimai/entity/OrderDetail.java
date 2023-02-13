@@ -41,4 +41,7 @@ public class OrderDetail implements Serializable {
 
     //图片
     private String image;
+
+    //菜品评分
+    private Integer rate;
 }

@@ -41,3 +41,13 @@ const addCategory = (params) => {
     data: { ...params }
   })
 }
+
+//获取全部餐厅
+const getCanteen = (params) =>{
+  return $axios({
+    'url': '/canteen/list',
+    method: 'get',
+    data: {"canteenId":params}
+  })
+}
+

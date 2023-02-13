@@ -92,12 +92,8 @@ public class EmployeeController {
     public Object login(@RequestBody Map<String,String> map, HttpSession session){
         log.info("进入/login");
         String password = DigestUtils.md5DigestAsHex(map.get("password").getBytes());
-
         Employee employee = service.getOne(new QueryWrapper<Employee>().eq("username",map.get("username")).eq("password",password));
         if (employee!=null){
-//            if (employee.getJob()!=1){
-//                return R.error("账号已禁用");
-//            }
             session.setAttribute("employee",employee.getId());      //filter会根据"employee"判断是否已登陆
             return R.success(employee);
         }else {

@@ -1,0 +1,13 @@
+#register .divContainer .divRSplit {
+    height: 5px;
+    background-color: #efefef;
+    border: 0;
+    margin-left: 10rem;
+    margin-right: 10rem;
+}
+
+.btnRegister {
+    /*display: flex;*/
+    margin-top: 10rem;
+    /*align-items: center;*/
+}

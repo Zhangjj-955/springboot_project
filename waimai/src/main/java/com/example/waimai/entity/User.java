@@ -26,18 +26,13 @@ public class User implements Serializable {
     private String phone;
 
 
-    //性别 0 女 1 男
-    private String sex;
+    //账号
+    private String account;
 
 
-    //身份证号
-    private String idNumber;
+    //密码
+    private String password;
 
-
-    //头像
-    private String avatar;
-
-
-    //状态 0:禁用，1:正常
-    private Integer status;
+    //余额
+    private Float balance;
 }
